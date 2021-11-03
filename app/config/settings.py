@@ -149,8 +149,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'djangologin99@gmail.com'
+EMAIL_HOST_USER = 'reparaciones.luas@gmail.com'
 
-EMAIL_HOST_PASSWORD = '0m4gATi3rr@'
+EMAIL_HOST_PASSWORD = '74156314'
 
 DOMAIN = ''

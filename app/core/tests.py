@@ -18,7 +18,7 @@ def send_email():
         mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
         print('Conectado..')
 
-        email_to = 'williamjairdavilavargas@gmail.com'
+        email_to = 'coy.saul@gmail.com'
         # Construimos el mensaje simple
         mensaje = MIMEMultipart()
         mensaje['From'] = settings.EMAIL_HOST_USER

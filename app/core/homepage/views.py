@@ -24,31 +24,11 @@ from django.views.generic import TemplateView, CreateView
 class IndexView(TemplateView):
     template_name = 'index.html'
 
+class NosotrosView(TemplateView):
+    template_name = 'nosotros.html'
 
-class productosindex(CreateView):
-    model = Product
-    template_name = 'index.html'
+class AnunciosView(TemplateView):
+    template_name = 'anuncios.html'
 
-
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        data = {}
-        try:
-            data = Product.objects.get(pk=request.POST['id']).toJSON()
-        except Exception as e:
-            data['error'] = str(e)
-        return JsonResponse(data)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Listado de Productos'
-        context['object_list'] = Product.objects.all()
-        context['create_url'] = reverse_lazy('erp:product_create')
-        context['list_url'] = reverse_lazy('erp:product_list')
-        context['entity'] = 'Productos'
-        context['nombre'] = Product.name
-
-
-        return context
+class ContactoView(TemplateView):
+    template_name = 'contacto.html'

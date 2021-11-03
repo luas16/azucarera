@@ -27,6 +27,7 @@ urlpatterns = [
     path('erp/', include('core.erp.urls')),
     path('reports/', include('core.reports.urls')),
     path('user/', include('core.user.urls')),
+    path('azucar/', include('core.homepage.urls')),
 ]
 
 if settings.DEBUG:

@@ -18,19 +18,22 @@ var vents = {
     },
     calculate_invoice: function () {
         var subtotal = 0.00;
-        var iva = $('input[name="iva"]').val();
+        // var iva = $('input[name="iva"]').val();
         $.each(this.items.products, function (pos, dict) {
             dict.pos = pos;
             dict.subtotal = dict.cant * parseFloat(dict.pvp);
             subtotal += dict.subtotal;
         });
-        this.items.subtotal = subtotal;
-        this.items.iva = this.items.subtotal * iva;
-        this.items.total = this.items.subtotal + this.items.iva;
+        this.items.subtotal = subtotal / 1.12;
+        this.items.iva = this.items.subtotal * 0.12;
+        total = this.items.subtotal + this.items.iva;
+        var descuento = (($('input[name="descuento"]').val()) / 100) * total;
+        this.items.total = total - (descuento);
 
         $('input[name="subtotal"]').val(this.items.subtotal.toFixed(2));
-        $('input[name="ivacalc"]').val(this.items.iva.toFixed(2));
+        $('input[name="iva"]').val(this.items.iva.toFixed(2));
         $('input[name="total"]').val(this.items.total.toFixed(2));
+        $('input[name="totalDesc"]').val(descuento.toFixed(2));
     },
     add: function (item) {
         this.items.products.push(item);
@@ -105,9 +108,9 @@ var vents = {
 
             }
         });
-        console.clear();
-        console.log(this.items);
-        console.log(this.get_ids());
+        // console.clear();
+        // console.log(this.items);
+        // console.log(this.get_ids());
     },
 };
 
@@ -131,7 +134,7 @@ function formatRepo(repo) {
         '<p style="margin-bottom: 0;">' +
         '<b>Nombre:</b> ' + repo.full_name + '<br>' +
         '<b>Stock:</b> ' + repo.stock + '<br>' +
-        '<b>PVP:</b> <span class="badge badge-warning">$' + repo.pvp + '</span>' +
+        '<b>Precio:</b> <span class="badge badge-warning">Q.' + repo.pvp + '</span>' +
         '</p>' +
         '</div>' +
         '</div>' +
@@ -154,21 +157,32 @@ $(function () {
         //minDate: moment().format("YYYY-MM-DD")
     });
 
-    $("input[name='iva']").TouchSpin({
+    //funcion para descuentos
+    $("input[name='descuento']").TouchSpin({
         min: 0,
         max: 100,
-        step: 0.01,
+        step: 1,
         decimals: 2,
         boostat: 5,
         maxboostedstep: 10,
         postfix: '%'
     }).on('change', function () {
         vents.calculate_invoice();
-    })
-        .val(0.12);
+    });
+    // $("input[name='iva']").TouchSpin({
+    //     min: 0,
+    //     max: 100,
+    //     step: 0.01,
+    //     decimals: 2,
+    //     boostat: 5,
+    //     maxboostedstep: 10,
+    //     postfix: '%'
+    // }).on('change', function () {
+    //     vents.calculate_invoice();
+    // })
+    //     .val(0.12);
 
     // search clients
-
     $('select[name="cli"]').select2({
         theme: "bootstrap4",
         language: 'es',
@@ -275,7 +289,7 @@ $(function () {
             var tr = tblProducts.cell($(this).closest('td, li')).index();
             vents.items.products[tr.row].cant = cant;
             vents.calculate_invoice();
-            $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toFixed(2));
+            $('td:eq(5)', tblProducts.row(tr.row).node()).html('Q.' + vents.items.products[tr.row].subtotal.toFixed(2));
         });
 
     $('.btnClearSearch').on('click', function () {
@@ -373,8 +387,8 @@ $(function () {
         submit_with_ajax(window.location.pathname, 'Notificación',
             '¿Estas seguro de realizar la siguiente acción?', parameters, function (response) {
                 alert_action('Notificación', '¿Desea imprimir la boleta de venta?', function () {
-                    window.open('/erp/sale/invoice/pdf/' + response.id + '/', '_blank');
-                    location.href = '/erp/sale/list/';
+                    window.open('/erp/sale/invoice/pdf/' + response.id + '/', '_blank'); //se abre una pagina en blanco con el pdf de la factura
+                    location.href = '/erp/sale/list/';  //se redirige cuando se hace submit
                 }, function () {
                     location.href = '/erp/sale/list/';
                 });

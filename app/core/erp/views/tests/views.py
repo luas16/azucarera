@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -15,7 +16,7 @@ class TestView(TemplateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-
+    #
     def post(self, request, *args, **kwargs):
         data = {}
         try:
@@ -26,7 +27,7 @@ class TestView(TemplateView):
                     data.append({'id': i.id, 'text': i.name, 'data': i.cat.toJSON()})
             elif action == 'autocomplete':
                 data = []
-                for i in Category.objects.filter(name__icontains=request.POST['term'])[0:10]:
+                for i in Product.objects.filter(name__icontains=request.POST['term'])[0:10]:
                     item = i.toJSON()
                     item['text'] = i.name
                     data.append(item)
@@ -41,3 +42,11 @@ class TestView(TemplateView):
         context['title'] = 'Select Aninados | Django'
         context['form'] = TestForm()
         return context
+
+
+def pedidos(request):
+    data = {
+        'title': 'Categorías',
+        'categorias': Category.objects.all()
+    }
+    return render(request, 'tests.html', data)

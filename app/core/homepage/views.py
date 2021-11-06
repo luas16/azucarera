@@ -32,3 +32,9 @@ class AnunciosView(TemplateView):
 
 class ContactoView(TemplateView):
     template_name = 'contacto.html'
+
+class ProcesosView(TemplateView):
+    template_name = 'procesos.html'
+
+class ProductosView(TemplateView):
+    template_name = 'productos.html'

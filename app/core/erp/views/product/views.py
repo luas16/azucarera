@@ -39,7 +39,6 @@ class ProductListView(LoginRequiredMixin, ValidatePermissionRequiredMixin, ListV
         context['entity'] = 'Productos'
         return context
 
-
 class ProductCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
@@ -71,7 +70,6 @@ class ProductCreateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Cre
         context['list_url'] = self.success_url
         context['action'] = 'add'
         return context
-
 
 class ProductUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, UpdateView):
     model = Product
@@ -105,7 +103,6 @@ class ProductUpdateView(LoginRequiredMixin, ValidatePermissionRequiredMixin, Upd
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
-
 
 class ProductDeleteView(LoginRequiredMixin, ValidatePermissionRequiredMixin, DeleteView):
     model = Product

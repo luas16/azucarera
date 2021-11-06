@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField, TextInput
 
 from core.erp.models import Category, Product, Client, Sale
 
@@ -101,7 +101,7 @@ class ClientForm(ModelForm):
             ),
             'dni': forms.TextInput(
                 attrs={
-                    'placeholder': 'Ingrese su dni',
+                    'placeholder': 'Ingrese su NIT',
                 }
             ),
             'date_birthday': forms.DateInput(format='%Y-%m-%d',

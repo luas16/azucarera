@@ -23,10 +23,9 @@ class Category(models.Model):
         verbose_name_plural = 'Categorias'
         ordering = ['id']
 
-
 class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
-    cat = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Categoría')
+    cat = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Ubicacion')
     image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')
     stock = models.IntegerField(default=0, verbose_name='Stock')
     pvp = models.DecimalField(default=0.00, max_digits=9, decimal_places=2, verbose_name='Precio de venta')
@@ -52,14 +51,13 @@ class Product(models.Model):
         verbose_name_plural = 'Productos'
         ordering = ['id']
 
-
 class Client(models.Model):
     names = models.CharField(max_length=150, verbose_name='Nombres')
     surnames = models.CharField(max_length=150, verbose_name='Apellidos')
-    dni = models.CharField(max_length=10, unique=True, verbose_name='Dni')
+    dni = models.CharField(max_length=10, unique=True, verbose_name='NIT')
     date_birthday = models.DateField(default=datetime.now, verbose_name='Fecha de nacimiento')
     address = models.CharField(max_length=150, null=True, blank=True, verbose_name='Dirección')
-    gender = models.CharField(max_length=10, choices=gender_choices, default='male', verbose_name='Sexo')
+    gender = models.CharField(max_length=10, choices=gender_choices, default='male', verbose_name='Género')
 
     def __str__(self):
         return self.get_full_name()
@@ -78,7 +76,6 @@ class Client(models.Model):
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
         ordering = ['id']
-
 
 class Sale(models.Model):
     cli = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -122,7 +119,6 @@ class Sale(models.Model):
         verbose_name_plural = 'Ventas'
         ordering = ['id']
 
-
 class DetSale(models.Model):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
     prod = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -144,3 +140,67 @@ class DetSale(models.Model):
         verbose_name = 'Detalle de Venta'
         verbose_name_plural = 'Detalle de Ventas'
         ordering = ['id']
+
+class Pedido(models.Model):
+        cli = models.ForeignKey(Client, on_delete=models.CASCADE)
+        date_joined = models.DateField(default=datetime.now)
+        subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+        iva = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+        total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+
+        def __str__(self):
+            return self.cli.names
+
+        def toJSON(self):
+            item = model_to_dict(self)
+            item['cli'] = self.cli.toJSON()
+            item['subtotal'] = format(self.subtotal, '.2f')
+            item['iva'] = format(self.iva, '.2f')
+            item['total'] = format(self.total, '.2f')
+            item['date_joined'] = self.date_joined.strftime('%Y-%m-%d')
+            item['det'] = [i.toJSON() for i in self.detpedido_set.all()]
+            return item
+
+        def delete(self, using=None, keep_parents=False):
+            for det in self.detpedido_set.all():
+                det.prod.stock += det.cant
+                det.prod.save()
+            super(Pedido, self).delete()
+
+        def calculate_invoice(self):
+            subtotal = 0.00
+            for d in self.detpedido_set.all():
+                d.subtotal = float(d.price) * int(d.cant)
+                d.save()
+                subtotal += d.subtotal
+            self.subtotal = subtotal
+            self.iva = self.subtotal * float(0.12)
+            self.total = float(self.subtotal) + float(self.iva)
+            self.save()
+
+        class Meta:
+            verbose_name = 'Pedido'
+            verbose_name_plural = 'Pedidos'
+            ordering = ['id']
+
+class Detpedido(models.Model):
+        sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
+        prod = models.ForeignKey(Product, on_delete=models.CASCADE)
+        price = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+        cant = models.IntegerField(default=0)
+        subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+
+        def __str__(self):
+            return self.prod.name
+
+        def toJSON(self):
+            item = model_to_dict(self, exclude=['pedido'])
+            item['prod'] = self.prod.toJSON()
+            item['price'] = format(self.price, '.2f')
+            item['subtotal'] = format(self.subtotal, '.2f')
+            return item
+
+        class Meta:
+            verbose_name = 'Detalle de Pedido'
+            verbose_name_plural = 'Detalle de Pedido'
+            ordering = ['id']

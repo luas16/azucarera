@@ -18,8 +18,8 @@ $(function () {
         columns: [
             {"data": "position"},
             {"data": "name"},
-            {"data": "desc"},
-            {"data": "desc"},
+            {"data": "comentario"},
+            {"data": "comentario"},
         ],
         columnDefs: [
             {

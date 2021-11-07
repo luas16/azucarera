@@ -204,3 +204,17 @@ class Detpedido(models.Model):
             verbose_name = 'Detalle de Pedido'
             verbose_name_plural = 'Detalle de Pedido'
             ordering = ['id']
+
+#modelo de la tabla para almacenar los comentarios
+class Coments(models.Model):
+    name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
+    comentario = models.CharField(max_length=500, null=True, blank=True, verbose_name='Comentario')
+    oficio = models.CharField(max_length=150, verbose_name='Profesión u oficio', default="Visitante")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Comentario'
+        verbose_name_plural = 'Comentarios'
+        ordering = ['id']

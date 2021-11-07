@@ -64,6 +64,7 @@
                 <li><a class="nav-link scrollto" href="#events">¿Cómo se hace?</a></li>
                 <li><a class="nav-link scrollto" href="#gallery">Galeria de Imagenes</a></li>
                 <li><a class="nav-link scrollto" href="#chefs">Colaboradores</a></li>
+                <li><a class="nav-link scrollto" href="#testimonials">Comentarios</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Contacto</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
@@ -234,7 +235,7 @@
                                     <li><i class="fas fa-check-circle"> Venta-Distribución</i>
                                     </li>
                                 </ul>
-                                <a href="{% url 'home:procesos' %}" type="button" class="btn btn-outline-light">Ver
+                                <a href="{% url 'home:procesos' %}" type="button" class="btn btn-warning form-control">Ver
                                     más..</a>
                             </div>
                         </div>
@@ -490,68 +491,29 @@
 
             <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
                 <div class="swiper-wrapper">
-
-                    <div class="swiper-slide">
-                        <div class="testimonial-item">
-                            <p>
-                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                Ha sido dificl pero no imposible, hemos trabajado duro.
-                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                            </p>
-                            <img src="{% static  'img/testimonios/testimonials-1.jpg' %}" class="testimonial-img"
-                                 alt="">
-                            <h3>Saul Coy</h3>
-                            <h4>Desarrollador</h4>
+                    {% for c in object_list %}
+                        <div class="swiper-slide">
+                            <div class="testimonial-item">
+                                <p>
+                                    <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                                    {{ c.comentario }}
+                                    <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                                </p>
+                                <h3>{{ c.name }}</h3>
+                                <h4>{{ c.oficio }}</h4>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
 
-                    <!-- testimonio 2 -->
-                    <div class="swiper-slide">
-                        <div class="testimonial-item">
-                            <p>
-                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                hola que hace
-                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                            </p>
-                            <img src="{% static  'img/testimonios/testimonials-2.jpg' %}" class="testimonial-img"
-                                 alt="">
-                            <h3>Andrea Poou</h3>
-                            <h4>Analista</h4>
-                        </div>
-                    </div>
-
-                    <!-- testimonio 3 -->
-                    <div class="swiper-slide">
-                        <div class="testimonial-item">
-                            <p>
-                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                Hola.... Adios
-                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                            </p>
-                            <img src="{% static  'img/testimonios/testimonials-4.jpg' %}" class="testimonial-img"
-                                 alt="">
-                            <h3>Kevin</h3>
-                            <h4>Diseñador</h4>
-                        </div>
-                    </div>
-
-                    <!-- testimonio 4 -->
-                    <div class="swiper-slide">
-                        <div class="testimonial-item">
-                            <p>
-                                <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                                SIUUUUUUU
-                                <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                            </p>
-                            <img src="{% static  'img/testimonios/testimonials-5.jpg' %}" class="testimonial-img"
-                                 alt="">
-                            <h3>El bicho</h3>
-                            <h4>Desarrollador</h4>
-                        </div>
-                    </div><!-- End testimonial item -->
                 </div>
                 <div class="swiper-pagination"></div>
+
             </div>
+        </div>
+        <div class="text-center">
+                <a href="{{ create_url }}" class="button">
+                    <i class="fas fa-plus"></i> Nuevo Comentario
+                </a>
         </div>
     </section>
 
@@ -625,7 +587,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <input type="text" name="subject" class="form-control" id="subject" placeholder=" Asunto"
+                                <input type="text" name="subject" class="form-control" id="subject"
+                                       placeholder=" Asunto"
                                        required>
                             </div>
                             <div class="col-md-6 form-group ">

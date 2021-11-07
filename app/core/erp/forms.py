@@ -3,7 +3,7 @@ from datetime import datetime
 from django import forms
 from django.forms import ModelForm, CharField, TextInput
 
-from core.erp.models import Category, Product, Client, Sale
+from core.erp.models import Category, Product, Client, Sale, Coments
 
 
 class CategoryForm(ModelForm):
@@ -195,4 +195,37 @@ class SaleForm(ModelForm):
                 'readonly': True,
                 'class': 'form-control',
             })
+        }
+
+
+# clase para los comentarios
+class ComentaryForm(ModelForm):
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # for form in self.visible_fields():
+    #     #     form.field.widget.attrs['class'] = 'form-control'
+    #     #     form.field.widget.attrs['autocomplete'] = 'off'
+    #     self.fields['name'].widget.attrs['autofocus'] = True
+
+    class Meta:
+        model = Coments
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ingrese su nombre',
+                }
+            ),
+            'comentario': forms.Textarea(
+                attrs={
+                    'placeholder': 'Ingrese su comentario',
+                    'rows': 3,
+                    'cols': 3
+                }
+            ),
+            'oficio': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ingrese su profesion y oficio',
+                }
+            ),
         }

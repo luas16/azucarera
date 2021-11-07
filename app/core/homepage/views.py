@@ -16,13 +16,21 @@ from weasyprint import HTML, CSS
 
 from core.erp.forms import SaleForm, ClientForm
 from core.erp.mixins import ValidatePermissionRequiredMixin
-from core.erp.models import Sale, Product, DetSale, Client
+from core.erp.models import Sale, Product, DetSale, Client, Coments
 
 from django.views.generic import TemplateView, CreateView
 
 
 class IndexView(TemplateView):
+    model = Coments
     template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Formulario de Comentarios'
+        context['object_list'] = Coments.objects.all()
+        context['create_url'] = reverse_lazy('erp:comentario_create')
+        return context
 
 class NosotrosView(TemplateView):
     template_name = 'nosotros.html'

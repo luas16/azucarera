@@ -42,11 +42,11 @@ class TestView(TemplateView):
         context['title'] = 'Select Aninados | Django'
         context['form'] = TestForm()
         return context
-
-
-def pedidos(request):
-    data = {
-        'title': 'Categorías',
-        'categorias': Category.objects.all()
-    }
-    return render(request, 'tests.html', data)
+#
+#
+# def pedidos(request):
+#     data = {
+#         'title': 'Categorías',
+#         'categorias': Category.objects.all()
+#     }
+#     return render(request, 'tests.html', data)
